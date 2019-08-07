@@ -1,17 +1,17 @@
-//
-//  ViewController.swift
-//  WebViewExample
-//
-//  Created by wayou on 10/26/18.
-//  Copyright © 2018 wayou. All rights reserved.
-//
-//  references:
-//  - https://www.hackingwithswift.com/read/4/2/creating-a-simple-browser-with-wkwebview
-//  - https://stackoverflow.com/questions/49638653/load-local-web-files-resources-in-wkwebview
-
-
 import UIKit
 import WebKit
+
+func imageForBase64String(_ strBase64: String) -> UIImage? {
+    
+    do{
+        let imageData = try Data(contentsOf: URL(string: strBase64)!)
+        let image = UIImage(data: imageData)
+        return image!
+    }
+    catch{
+        return nil
+    }
+}
 
 class ViewController: UIViewController,WKNavigationDelegate {
     
@@ -19,12 +19,6 @@ class ViewController: UIViewController,WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        load remote url
-//        let url = URL(string: "https://www.google.com")!
-//        webView.load(URLRequest(url: url))
-//        webView.allowsBackForwardNavigationGestures = true
-        
-//        load local html file
         let url = Bundle.main.url(forResource: "example", withExtension: "html", subdirectory: "local_html")!
         webView.loadFileURL(url, allowingReadAccessTo: url)
         let request = URLRequest(url: url)
@@ -41,7 +35,20 @@ class ViewController: UIViewController,WKNavigationDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if navigationAction.navigationType == WKNavigationType.linkActivated {
+            let url = navigationAction.request.url
+            if(url != nil) {
+                let filenameSplits = url?.absoluteString.split(separator: ";", maxSplits: 1, omittingEmptySubsequences: false)
+                let dataSplits = filenameSplits?[1].split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
+                let fileData = Data(base64Encoded: String(dataSplits?[1] ?? ""))!
+                let image = UIImage(data: fileData)!
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+                decisionHandler(WKNavigationActionPolicy.cancel)
+                return
+            }
+        }
+        decisionHandler(WKNavigationActionPolicy.allow)
+    }
 }
 

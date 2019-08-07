@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="./example.css">
 </head>
 <body>
-    hello, webview!
-    <script src="./example.js"></script>
+    Click tha button to save QR code to image gallery
+    <script type="text/javascript">
+        function download(filename, text) {
+            var pom = document.createElement('a');
+            pom.setAttribute('href', 'data:image/png;base64,' + text);
+            pom.setAttribute('download', filename);
+            pom.click();
+        }
+    </script>
+    <button onclick="download('qr.png', 'iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAMAAAAL34HQAAAAHnRFWHRTb2Z0d2FyZQBid2lwLWpzLm1ldGFmbG9vci5jb21Tnbi0AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMA/1uRIrUAAAFUSURBVHic7dAxEoQwDENRuP+ltw3jSCgZtgB/V0xiyy8cZ1xHqeS8fke7YMFqyarRfk0y5Yk3/bBgNWadpVRcgvM5N7tgwYIVsDwFFixY/2ZVouqHBQvWHkuVpySLVY7cBQtWS1ZSavHqd7QLFqxmrL16OO6pggXrtawxLvn2CfltPb+cwILVjDUe1VJxqjM58cTJP4MFqwFLjakXeO5eDyxYsFSEXzDeqtoE5YthwfooS0X7lU895jILC1Yz1mq0D1KP8QkLBQvWR1n++iyVRCdTNw+DBasZS13UlXnoao98JCxYbVgTYzCs0Ks58kfAgtWMtVp5qF/mibBgdWPVa1U1NF/vvyc5sGC1ZNU4FZ2E+iclRFiwOrNUnO/xlE0uLFiwLEtB884ICgsWLMuaRATQiDLOwoLVmKVKDasH5Gg5BQtWS1ZSyWLV6c8nnbBg9WL9AAzWLdlEo2r9AAAAAElFTkSuQmCC');">Download qr</button>
 </body>
 </html>
